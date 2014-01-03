@@ -1,0 +1,99 @@
+<project name="MercuryTours" basedir="." >
+  <!-- Lats Updated Dec14 2010 0312PM  Author Bharath Marrivada - mbr.reddy@gmail.com  -->
+  <description>Selenium 2 Common Build Tasks</description>
+	
+  <!-- Change the folder path as per ur settings  -->
+  <!-- For eclipse src\******  -->
+  <property name="build.src" location="src\MercuryTours"/>
+  <!--  ${basedir}/jars  -->
+  <!--  C:\TestSuiteBharath\jars  -->
+	
+  <property name="build.jars" location="C:\seleniumJars\libs\"/>
+	
+  <property name="build.output" location="target/classes"/>
+  <property name="build.ScreenShots" location="ScreenShots"/>
+  <property name="dist" location="${basedir}/target/jar"/>
+  <property name="reports" location="${basedir}/Test_Reports"/>
+  <property environment="env"/>
+
+  <target name="clean" description="Remove generated artifacts">
+    <delete dir="target"/>
+  	<!--<delete dir="ScreenShots"/>-->
+  	<!--<delete dir="Test_Reports"/>-->
+  	<delete dir="test-output"/>
+  </target>
+
+  <!-- Compile classpath -->
+   <path id="compile.classpath">
+       <fileset dir="${build.jars}" includes="*.jar"/>
+   </path>  
+  
+  <target name="compile" description="compile the source ">
+    <mkdir dir="${build.output}"/>
+  	<mkdir dir="${build.ScreenShots}"/>
+    <javac srcdir="${build.src}"
+           destdir="${build.output}"
+           debug="true"
+           source="1.5"
+           target="1.7"
+    	   includeAntRuntime="no">
+      <classpath refid="compile.classpath"/>
+    </javac>
+  </target>
+
+  <target name="package" depends="compile" description="Package as a jar">
+    <tstamp>
+ 	  <format property="NOW2" pattern="ddMMMMyyyy_HHmmss" />
+    </tstamp>  	
+    <mkdir dir="${dist}"/>
+    <jar jarfile="${dist}/SeleniumTest.jar" basedir="${build.output}">
+      <manifest>
+        <attribute name="Main-Class" value=""/>
+        <attribute name="Built-By" value="OpenQA.org"/>
+        <attribute name="Build-Time" value="${NOW2}"/>
+        <section name="common">
+          <attribute name="Specification-Title" value="Bharath"/>
+          <attribute name="Specification-Version" value="1.0"/>
+          <attribute name="Specification-Vendor" value="OpenQA.org"/>
+        </section>
+      </manifest>
+    </jar>
+  </target>
+	
+
+  <path id="demo.classpath">
+	<fileset dir="${dist}">
+	  <!--Application JAR Name-->
+	  <include name="SeleniumTest.jar"/>
+	</fileset>
+	<fileset dir="${build.jars}">
+	   <include name="*.jar"/>
+	</fileset>
+	   <pathelement path="${java.class.path}/"/>
+  </path>
+	
+	
+	
+  <target name="run" depends="package" description="Run Mercury Tours ">
+     <tstamp>
+ 	  <format property="NOW" pattern="ddMMMMyyyy_hhmmss" />
+     </tstamp>  	
+  	 <echo message="Test started: ${NOW}" />
+  	 <mkdir dir="${reports}/${NOW}"/>
+	 <java classpathref="demo.classpath"
+	     classname="org.testng.TestNG"
+	     failonerror="true">
+	     <arg value="-d" />
+	     <arg value="${reports}/${NOW}" />	 	
+	     <arg value="-suitename" />
+	     <arg value="MercuryToursSuite" />	 	
+	 	 <arg value="testng.xml"/>
+	  </java>
+    <tstamp>
+ 	  <format property="NOW1" pattern="ddMMMMyyyy_hhmmss" />
+    </tstamp>
+ 	<echo message="Test ended: ${NOW1}" />  	
+  </target>		 
+	 
+	 
+</project>

@@ -1,0 +1,20 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="MercuryToursSuite" verbose="3" >
+
+
+  <listeners>
+    <listener class-name="MercuryTours.TestNG.TestNGCustom" />
+	<listener class-name="MercuryTours.TestNG.TestNGCustomeListener" />
+  </listeners>	  
+  
+  <test name="ToursSuite" preserve-order="true" >
+   	<classes>
+   		<class name="MercuryTours.initilize"/>
+
+    	<class name="MercuryTours.MercuryTours_TC_01"/>
+    	<class name="MercuryTours.MercuryTours_TC_03"/>
+
+    	<class name="MercuryTours.SendEmail"/>
+    </classes>
+  </test>
+</suite>
